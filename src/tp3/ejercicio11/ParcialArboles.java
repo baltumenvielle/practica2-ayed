@@ -30,7 +30,7 @@ public class ParcialArboles {
 				cantNodosActual = 0;
 			}
 		}
-		return true;
+		return (cantNodosActual == nivel+1);
 	}
 
 	public static void main(String[] args) {
