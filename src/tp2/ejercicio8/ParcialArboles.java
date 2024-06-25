@@ -5,21 +5,22 @@ import tp2.ejercicio1.BinaryTree;
 public class ParcialArboles {
 	
 	public boolean esPrefijo(BinaryTree<Integer> arbol1, BinaryTree<Integer> arbol2) {
-		return helper(arbol1, arbol2);
+		return prefijoHelper(arbol1, arbol2);
 	}
 	
-	private boolean helper(BinaryTree<Integer> arbol1, BinaryTree<Integer> arbol2) {
-		if (arbol1.getData() == arbol2.getData()) {
+	private boolean prefijoHelper(BinaryTree<Integer> arbol1, BinaryTree<Integer> arbol2) {
+		if (arbol2.getData() == arbol1.getData()) {
+			
 			boolean checkizq = true, checkder = true;
-			if (arbol1.hasLeftChild() && arbol2.hasLeftChild()) {
-				checkizq = helper(arbol1.getLeftChild(), arbol2.getLeftChild());
+			
+			if (arbol2.hasLeftChild() && arbol1.hasLeftChild()) {
+				checkizq = prefijoHelper(arbol1.getLeftChild(), arbol2.getLeftChild());
 			}
-			if (arbol1.hasRightChild() && arbol2.hasRightChild()) {
-				checkder = helper(arbol1.getRightChild(), arbol2.getRightChild());
+			if (arbol2.hasRightChild() && arbol1.hasRightChild()) {
+				checkder = prefijoHelper(arbol1.getRightChild(), arbol2.getRightChild());
 			}
-			if ((arbol1.hasRightChild() && !arbol2.hasRightChild()) || (arbol1.hasLeftChild() && !arbol2.hasLeftChild())) {
-				return false;
-			}
+			if (!arbol2.hasLeftChild() && arbol1.hasLeftChild() || !arbol2.hasRightChild() && arbol1.hasRightChild()) return false;
+			
 			return checkizq && checkder;
 		}
 		return false;

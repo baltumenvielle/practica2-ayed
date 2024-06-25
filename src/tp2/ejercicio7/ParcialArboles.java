@@ -11,62 +11,54 @@ public class ParcialArboles {
 	}
 	
 	public boolean isLeftTree(int num) {
-		BinaryTree<Integer> subab = buscar(num, a);
+		BinaryTree<Integer> nodo = buscar(a, num);
+		
+		if (nodo == null) return false;
+		
 		int hi, hd;
 		
-		if (subab == null) {
-			return false;
-		}
-		
-		if (subab.hasLeftChild()) {
-			hi = cantidad(subab.getLeftChild());
-		}
+		if (nodo.hasLeftChild()) hi = contar(nodo.getLeftChild());
 		else hi = -1;
-		if (subab.hasRightChild()) {
-			hd = cantidad(subab.getRightChild());
-		}
+		if (nodo.hasRightChild()) hd = contar(nodo.getRightChild());
 		else hd = -1;
 		
 		return hi > hd;
 	}
 	
-	private BinaryTree<Integer> buscar(int num, BinaryTree<Integer> a) {
-		BinaryTree<Integer> hi = new BinaryTree<Integer>(), hd = new BinaryTree<Integer>();
-		hi = null; hd = null;
-		if (a.getData() == num) {
-			return a;
-		}
+	private BinaryTree<Integer> buscar(BinaryTree<Integer> a, int num) {
+		if (a.getData() == num) return a;
+		
+		BinaryTree<Integer> aux = new BinaryTree<Integer>();
+		aux = null;
+		
 		if (a.hasLeftChild()) {
-			hi = buscar(num, a.getLeftChild());
+			aux = buscar(a.getLeftChild(), num);
 		}
-		if (hi != null) {
-			return hi;
+		if (a.hasRightChild() && aux == null) {
+			aux = buscar(a.getRightChild(), num);
 		}
-		if (a.hasRightChild()) {
-			hd = buscar(num, a.getRightChild());
-		}
-		if (hd != null) {
-			return hd;
-		}
+		
+		if (aux != null) return aux;
 		return null;
 	}
 	
-	private int cantidad(BinaryTree<Integer> a) {
+	private int contar(BinaryTree<Integer> a) {
 		boolean izq = a.hasLeftChild(), der = a.hasRightChild();
 		int suma = 0;
 		
-		if (izq && der == false || der && izq == false) {
+		if (izq && !der || !izq && der) {
 			suma++;
 		}
 		if (izq) {
-			suma += cantidad(a.getLeftChild());
+			suma += contar(a.getLeftChild());
 		}
 		if (der) {
-			suma += cantidad(a.getRightChild());
+			suma += contar(a.getRightChild());
 		}
+		
 		return suma;
 	}
-
+	
 	public static void main(String[] args) {
 		BinaryTree<Integer> a = new BinaryTree<Integer>(2);
 		BinaryTree<Integer> izq = new BinaryTree<Integer>(7);

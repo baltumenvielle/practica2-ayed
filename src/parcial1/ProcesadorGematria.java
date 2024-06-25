@@ -23,15 +23,11 @@ public class ProcesadorGematria {
 			
 			List<GeneralTree<Integer>> children = a.getChildren();
 			for (GeneralTree<Integer> child: children) {
-				cant += contarHelper(child, valor, suma+a.getData());
+				cant += contarHelper(child, valor, suma);
 			}
 			return cant;
 		}
 		else return 0;
 	}
-
-	public static void main(String[] args) {
-
-	}
-
+	
 }

@@ -16,6 +16,7 @@ public class ParcialArboles {
 		
 		while (!cola.isEmpty()) {
 			GeneralTree<Integer> nodo = cola.remove();
+			
 			if (nodo != null) {
 				cantNodosActual++;
 				List<GeneralTree<Integer>> children = nodo.getChildren();
@@ -23,6 +24,7 @@ public class ParcialArboles {
 					cola.add(child);
 				}
 			}
+			
 			else if (!cola.isEmpty()) {
 				if (cantNodosActual != nivel+1) return false;
 				cola.add(null);
@@ -32,7 +34,7 @@ public class ParcialArboles {
 		}
 		return (cantNodosActual == nivel+1);
 	}
-
+	
 	public static void main(String[] args) {
         List <GeneralTree<Integer>> subChildren1 = new LinkedList <GeneralTree<Integer>>();
         subChildren1.add(new GeneralTree<Integer>(83));

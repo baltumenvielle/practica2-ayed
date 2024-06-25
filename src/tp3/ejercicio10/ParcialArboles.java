@@ -7,32 +7,33 @@ import java.util.LinkedList;
 public class ParcialArboles {
 	
 	public static List<Integer> resolver(GeneralTree<Integer> arbol) {
-		List<Integer> caminoMax = new LinkedList<Integer>(), caminoActual = new LinkedList<Integer>();
-		if (!arbol.isEmpty()) resolverHelper(arbol, caminoMax, caminoActual, 0, 0, 0);
+		List<Integer> caminoActual = new LinkedList<Integer>(), caminoMax = new LinkedList<Integer>();
+		resolverHelper(arbol, caminoMax, caminoActual, 0, 0, 0);
 		return caminoMax;
 	}
 	
-	private static int resolverHelper(GeneralTree<Integer> arbol, List<Integer> caminoMax, List<Integer> caminoActual, int nivel, int valor, int maxValor) {
-		if (arbol.getData() != 0) {
+	private static int resolverHelper(GeneralTree<Integer> arbol, List<Integer> caminoMax, List<Integer> caminoActual, int nivel, int sumaActual, int sumaMax) {
+		if (arbol.getData() == 1) {
 			caminoActual.add(arbol.getData());
-			valor += nivel;
+			sumaActual += nivel;
 		}
-		if (!arbol.isLeaf()) {
-			List<GeneralTree<Integer>> children = arbol.getChildren();
-			for (GeneralTree<Integer> child: children) {
-				maxValor = resolverHelper(child, caminoMax, caminoActual, nivel+1, valor, maxValor);
-			}
+		
+		List<GeneralTree<Integer>> children = arbol.getChildren();
+		for (GeneralTree<Integer> child: children) {
+			sumaMax = resolverHelper(child, caminoMax, caminoActual, nivel+1, sumaActual, sumaMax);
 		}
-		if (valor > maxValor) {
+		
+		if (sumaActual > sumaMax) {
+			sumaMax = sumaActual;
 			caminoMax.removeAll(caminoMax);
 			caminoMax.addAll(caminoActual);
-			maxValor = valor;
 		}
 		if (arbol.getData() == 1) {
-			valor -= nivel;
+			sumaActual -= nivel;
 			caminoActual.remove(caminoActual.size()-1);
 		}
-		return maxValor;
+		
+		return sumaMax;
 	}
 
 	public static void main(String[] args) {

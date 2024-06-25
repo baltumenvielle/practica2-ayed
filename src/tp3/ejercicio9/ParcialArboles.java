@@ -12,19 +12,20 @@ public class ParcialArboles {
 	
 	private static boolean seleccionHelper(GeneralTree<Integer> arbol) {
 		if (arbol.isLeaf()) return true;
-		Integer min = Integer.MAX_VALUE;
+		
+		int min = Integer.MAX_VALUE;
+		
 		List<GeneralTree<Integer>> children = arbol.getChildren();
 		for (GeneralTree<Integer> child: children) {
-			if (seleccionHelper(child)) {
-				if (child.getData() <= min) {
-					min = child.getData();
+				if (seleccionHelper(child)) {
+					if (child.getData() <= min) min = Math.min(min, child.getData());
 				}
-			}
-			else return false;
+				else return false;
 		}
+		
 		return arbol.getData() == min;
 	}
-
+	
 	public static void main(String[] args) {
         List <GeneralTree<Integer>> subChildren1 = new LinkedList <GeneralTree<Integer>>();
         subChildren1.add(new GeneralTree<Integer>(35));
