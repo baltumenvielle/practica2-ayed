@@ -14,35 +14,34 @@ public class VisitaOslo {
 		if (!lugares.isEmpty()) {
 			Vertex<String> origen = lugares.search("Ayuntamiento");
 			Vertex<String> destinoNodo = lugares.search(destino);
-			if (origen != null && destinoNodo != null) {
-				paseoHelper(lugares, visitados, origen, destinoNodo, lugaresRestringidos, camino,  maxTiempo);
-				return camino;
+			
+			if (origen != null && destino != null) {
+				paseoHelper(lugares, visitados, origen, destinoNodo, lugaresRestringidos, camino, maxTiempo);
 			}
 		}
-		return null;
+		return camino;
 	}
 	
-	private boolean paseoHelper(Graph<String> lugares, boolean[] visitados, Vertex<String> vertice, Vertex<String> destino, List<String> lugaresRestringidos, List<String> camino, int tiempo) {
-		camino.add(vertice.getData());
+	private boolean paseoHelper(Graph<String> grafo, boolean[] visitados, Vertex<String> vertice, Vertex<String> destino, List<String> lugaresRestringidos, List<String> camino, int tiempo) {
 		visitados[vertice.getPosition()] = true;
+		camino.add(vertice.getData());
 		
 		if (vertice == destino) return true;
 		
 		boolean encontre = false;
-		List<Edge<String>> aristas = lugares.getEdges(vertice);
+		List<Edge<String>> aristas = grafo.getEdges(vertice);
 		for (Edge<String> arista: aristas) {
 			int pos = arista.getTarget().getPosition();
-			String lugar = arista.getTarget().getData();
 			int tiempoNecesario = arista.getWeight();
+			String lugar = arista.getTarget().getData();
 			
 			if (lugaresRestringidos.contains(lugar)) visitados[pos] = true;
 			
-			if (!visitados[pos] && !encontre && tiempo-tiempoNecesario >= 0) {
-				encontre = paseoHelper(lugares, visitados, arista.getTarget(), destino, lugaresRestringidos, camino, (tiempo-tiempoNecesario));
+			if (!visitados[pos] && tiempo-tiempoNecesario >= 0 && !encontre) {
+				encontre = paseoHelper(grafo, visitados, arista.getTarget(), destino, lugaresRestringidos, camino, (tiempo-tiempoNecesario));
 			}
 		}
 		if (!encontre) camino.remove(camino.size()-1);
-		
 		visitados[vertice.getPosition()] = false;
 		return encontre;
 	}

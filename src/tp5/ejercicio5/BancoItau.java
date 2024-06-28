@@ -8,53 +8,57 @@ import tp5.ejercicio1.adjList.*;
 
 public class BancoItau {
 	
-	public List<Jubilado> jubiladosCercanos(Graph<Persona> grafo, String empleado, int distancia) {
+	public List<Jubilado> encontrarJubilados(Graph<Persona> personas, String empleado, int grado) {
 		List<Jubilado> jubilados = new LinkedList<Jubilado>();
-		boolean[] visitados = new boolean[grafo.getSize()];
 		
-		if (!grafo.isEmpty()) {
-			Vertex<Persona> empleadoNodo = this.buscarEmpleado(grafo, empleado);
+		if (!personas.isEmpty()) {
+			Vertex<Persona> empleadoNodo = buscarEmpleado(personas, empleado); // busqueda del empleado
 			
 			if (empleadoNodo != null) {
 				Queue<Vertex<Persona>> cola = new LinkedList<Vertex<Persona>>();
+				boolean[] visitados = new boolean [personas.getSize()];
 				
+				visitados[empleadoNodo.getPosition()] = true;
 				cola.add(empleadoNodo);
 				cola.add(null);
-				visitados[empleadoNodo.getPosition()] = true;
 				
-				while (!cola.isEmpty() && distancia > 0 && jubilados.size() < 40) {
+				while (!cola.isEmpty() && grado > 0 && jubilados.size() < 40) {
 					Vertex<Persona> w = cola.remove();
+					
 					if (w != null) {
-						List<Edge<Persona>> aristas = grafo.getEdges(w);
+						List<Edge<Persona>> aristas = personas.getEdges(w);
 						for (Edge<Persona> arista: aristas) {
-							int pos = arista.getTarget().getPosition();
-							if (!visitados[pos]) {
-								visitados[pos] = true;
-								cola.add(arista.getTarget());
-								if (arista.getTarget().getData().cumple()) {
-									jubilados.add(new Jubilado(arista.getTarget().getData().getNombre(), arista.getTarget().getData().getDomicilio()));
+							Vertex<Persona> verticeDestino = arista.getTarget();
+							
+							if (!visitados[verticeDestino.getPosition()]) {
+								visitados[verticeDestino.getPosition()] = true;
+								cola.add(verticeDestino);
+								if (verticeDestino.getData().cumple()) {
+									jubilados.add(new Jubilado(verticeDestino.getData().getNombre(), verticeDestino.getData().getDomicilio()));
 								}
 							}
 						}
 					}
 					else if (!cola.isEmpty()) {
-						distancia--;
+						grado--;
 						cola.add(null);
 					}
 				}
-			}
 		}
+		
+		}
+		
 		return jubilados;
 	}
 	
-	private Vertex<Persona> buscarEmpleado(Graph<Persona> grafo, String empleado) {
+	private static Vertex<Persona> buscarEmpleado(Graph<Persona> grafo, String empleado) {
 		List<Vertex<Persona>> vertices = grafo.getVertices();
+		Vertex<Persona> persona = null;
+		
 		for (Vertex<Persona> vertice: vertices) {
-			if (vertice.getData().getNombre().equals(empleado)) {
-				return vertice;
-			}
+			if (vertice.getData().getNombre().equals(empleado)) return vertice;
 		}
-		return null;
+		return persona;
 	}
 
 	public static void main(String[] args) {
@@ -91,13 +95,13 @@ public class BancoItau {
         
         BancoItau banco = new BancoItau();
         
-        //System.out.println(banco.carteraJubilados(grafo, "Matias", 1));
-        System.out.println(banco.jubiladosCercanos(grafo, "Matias", 2));
-        //System.out.println(banco.carteraJubilados(grafo, "Matias", 3));
+        //System.out.println(banco.encontrarJubilados(grafo, "Matias", 1));
+        //System.out.println(banco.encontrarJubilados(grafo, "Matias", 2));
+        System.out.println(banco.encontrarJubilados(grafo, "Matias", 3));
         
-        //System.out.println(banco.carteraJubilados(grafo, "Rosana", 2));
+        //System.out.println(banco.encontrarJubilados(grafo, "Rosana", 2));
         
-        //System.out.println(banco.carteraJubilados(grafo, "Matias", 2));
+        //System.out.println(banco.encontrarJubilados(grafo, "Matias", 2));
 	}
 
 }

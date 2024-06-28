@@ -7,7 +7,7 @@ import tp5.ejercicio1.adjList.*;
 
 public class BuscadorDeCaminos {
 	
-	Graph<String> bosque;
+	private Graph<String> bosque;
 	
 	public BuscadorDeCaminos(Graph<String> bosque) {
         this.setBosque(bosque);
@@ -21,36 +21,35 @@ public class BuscadorDeCaminos {
         this.bosque = bosque;
     }
 	
-	public List<List<String>> recorridosMasSeguros() {
-		List<List<String>> recorridos = new LinkedList<List<String>>();
+	public List<List<String>> recorridoMasSeguro() {
+		List<List<String>> recorrido = new LinkedList<List<String>>();
 		List<String> caminoActual = new LinkedList<String>();
 		boolean[] visitados = new boolean[bosque.getSize()];
 		
 		if (!bosque.isEmpty()) {
 			Vertex<String> origen = bosque.search("Casa Caperucita");
 			Vertex<String> destino = bosque.search("Casa Abuelita");
+			
 			if (origen != null && destino != null) {
-				recorridoHelper(visitados, origen, destino, caminoActual, recorridos);
-				return recorridos;
+				recorridoHelper(origen, visitados, recorrido, caminoActual, destino);
 			}
 		}
-		return null;
+		
+		return recorrido;
 	}
 	
-	private void recorridoHelper(boolean[] visitados, Vertex<String> vertice, Vertex<String> destino, List<String> caminoActual, List<List<String>> recorridos) {
+	private void recorridoHelper(Vertex<String> vertice, boolean[] visitados, List<List<String>> recorrido, List<String> caminoActual, Vertex<String> destino) {
 		visitados[vertice.getPosition()] = true;
 		caminoActual.add(vertice.getData());
 		
-		if (vertice == destino) {
-			recorridos.add(new LinkedList<String>(caminoActual));
-		}
+		if (vertice == destino) recorrido.add(new LinkedList<String>(caminoActual));
 		
 		List<Edge<String>> aristas = bosque.getEdges(vertice);
 		for (Edge<String> arista: aristas) {
 			int pos = arista.getTarget().getPosition();
 			
 			if (!visitados[pos] && arista.getWeight() < 5) {
-				recorridoHelper(visitados, arista.getTarget(), destino, caminoActual, recorridos);
+				recorridoHelper(arista.getTarget(), visitados, recorrido, caminoActual, destino);
 			}
 		}
 		visitados[vertice.getPosition()] = false;
@@ -89,9 +88,10 @@ public class BuscadorDeCaminos {
         bosque.connect(v6, v7, 9);
         bosque.connect(v7, v6, 9);
         BuscadorDeCaminos bos = new BuscadorDeCaminos(bosque);
-        List<List<String>> lis = bos.recorridosMasSeguros();
+        List<List<String>> lis = bos.recorridoMasSeguro();
         for(List<String> l: lis) {
             System.out.println(l);
         }
 	}
+
 }
